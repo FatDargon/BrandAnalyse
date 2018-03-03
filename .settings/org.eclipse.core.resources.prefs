@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//test/test_handle_lines.py=utf-8
+encoding//test_package/test_PIL.py=utf-8
+encoding//test_package/test_PIL_opencv.py=utf-8
+encoding//test_package/test_matplotlib.py=utf-8
+encoding//test_package/test_opencv.py=utf-8
+encoding//test_package/test_scimage.py=utf-8
+encoding//test_package/test_skimage.py=utf-8
+encoding//tools/GetRect.py=utf-8
+encoding//tools/HandleLines.py=utf-8

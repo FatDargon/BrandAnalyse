@@ -11,15 +11,16 @@ import matplotlib.image as mping
 import numpy as np
 import skimage.transform as st
 import skimage.feature
-from skimage import feature
+from skimage import feature,filters
 from scipy import misc
 from PIL import ImageEnhance
 from skimage.exposure.exposure import histogram
 import skimage.morphology as sm
+from skimage.morphology.watershed import watershed
+from tools.HandleLines import handle_lines
 image_path = '../TestImage/1.png'
 img = Image.open(image_path).convert('L')
 img = ~np.array(img)
-
 # hist = plt.hist(img11)
 # plt.imshow(img11,"gray_r")
 # plt.show()
@@ -29,16 +30,25 @@ img = ~np.array(img)
 # print img.shape
 # img1 = ImageEnhance.Contrast(img)
 # img =img1.enhance(factor=1.5)
-img =misc.imresize(img, size=0.5)
-img = sm.erosion(img,sm.square(3))
+img =misc.imresize(img, size=0.3)
+img = sm.closing(img,sm.square(5))
+# img = sm.erosion(img,sm.square(5))
 
 # img1 = img[:,:,0]
 # plt.imshow(img1,"gray_r")
 # plt.show()
 _edges = feature.canny(img, sigma=1, \
-    low_threshold=20, high_threshold=230, mask=None, use_quantiles=False)
+    low_threshold=50, high_threshold=200)
+# _edges =filters.sobel(img)
+# markers = np.zeros_like(img)
+# markers[img < 30] = 1
+# markers[img > 150] = 2
+# _edges = watershed(img,markers)
 _lines = st.probabilistic_hough_line(_edges, \
-    threshold=20, line_length=500, line_gap=30)
+    threshold=20, line_length=20, line_gap=10)
+
+
+_lines = handle_lines(_lines)
 fig,(ax0,ax1,ax2)=plt.subplots(1,3,figsize=(16,9))
 plt.tight_layout()
 ax0.imshow(img,"gray_r")
