@@ -12,27 +12,51 @@ def handle_lines(lines,width,height):
     i = 0
 #     print lines[0]
     ks,kh=get_hs(lines,width)
+    print 'get_hs'
+    print ks
     ks,kh=get_marge(ks,kh)
+    print 'get_marge'
+    print ks
     ks,kh=extend_line(ks,kh,width,height)
+    print 'extend_line'
+    print ks
     ks,kh=cut_line(ks,kh,width)
+    print 'cut_line'
+    print ks
+    if kh==[]:
+        kh=[[0,0,width,0],[0,height,width,height]]
     return ks,kh
+def normal(x,width):
+    if x<width*0.25:
+        x=0
+    if x>width*0.125*5:
+        x=width
+    if math.fabs(x-width/2)<width/8:
+        x = width/2
+    if math.fabs(x-width/2)<width/8:
+        x = width/2
+    return x
 def get_hs(lines,width):
     kh = []#横线
     ks = []#竖线
-    for line in lines:
-        for x1,y1,x2,y2 in line:
-            L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
-            if L < (width/16)*(width/16):
-                continue
-            #if the length of the line <width/16 abandon
-            k1 = (x1-x2)*(x1-x2)
-            k2 = (y1-y2)*(y1-y2)
-            tmp =[x1,y1,x2,y2]
-            # 区分横线还是竖线
-            if k1<0.5:
-                ks.append(tmp)  
-            elif k2<0.5:  
-                kh.append(tmp)
+    try:       
+        for line in lines:
+            for x1,y1,x2,y2 in line:
+                L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+                if L < (width/16)*(width/16):
+                    continue
+                #if the length of the line <width/16 abandon
+                k1 = (x1-x2)*(x1-x2)
+                k2 = (y1-y2)*(y1-y2)
+                tmp =[x1,y1,x2,y2]
+                # 区分横线还是竖线
+                if k1<0.5:
+                    ks.append(tmp)  
+                elif k2<0.5:  
+                    kh.append(tmp)
+    except:
+        print "lines is empty"
+        return [],[]
     return ks,kh
 def get_marge(ks,kh):
     #合并横线
@@ -66,20 +90,14 @@ def extend_line(ks,kh,width,height):
         L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
         if L<=(width/8)*(width/8):
             continue
-        tmp =[x1,y1,x2,y2]
-        if x1<width/4:
-            tmp[0]=0
-        if x2>width/4*3:
-            tmp[2]=width
-        if math.fabs(x1-width/2)<width/4:
-            tmp[0] = width/2
-        if math.fabs(x2-width/2)<width/4:
-            tmp[2] = width/2
+        tmp =[normal(x1,width),y1,normal(x2,width),y2]
+        print 'tmp:'
+        print tmp
         new_kh.append(tmp)
     new_kh.sort(cmp=None, key=operator.itemgetter(1))
     for x1,y1,x2,y2 in ks:
         L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
-        if L<=(height/2)*(height/2)*0.2:
+        if L<=(height/32)*(height/32):
             continue
         _min = 0
         _max = height
@@ -93,6 +111,8 @@ def extend_line(ks,kh,width,height):
         new_ks.append([x1,_min,x2,_max])
     return new_ks,new_kh
 def cut_line(ks,kh,width):
+    if ks==[] or kh==[]:
+        return ks,kh
     _min = ks[0][1]
     _max = ks[0][3]
     new_kh = []
