@@ -11,7 +11,16 @@ from scipy import misc
 from tools.HandleLines import handle_lines
 from tools.GetRect import get_rect
 import random
+
+global src
+global img
+global window_name
+global window_name2
 def HoughLinesP(minLINELENGTH):
+    global src
+    global img
+    global window_name
+    global window_name2
     edges = cv2.Canny(src, 5,100, apertureSize = 3)
     lines = cv2.HoughLinesP(edges, 1, np.pi/180,minLINELENGTH, 50)
     tempIamge = src.copy()
@@ -38,12 +47,18 @@ def HoughLinesP(minLINELENGTH):
         cv2.rectangle(tempIamge2,(z,x),(c,v),(R,G,B),-1)
     cv2.imshow(window_name,tempIamge)
     cv2.imshow(window_name2,tempIamge2)
+# def main_show(i):
+i=34
+global src
+global img
+global window_name
+global window_name2
 window_name = "HoughLines"
 window_name2 = "source"
 cv2.namedWindow(window_name,cv2.WINDOW_NORMAL)
 cv2.namedWindow(window_name2,cv2.WINDOW_NORMAL)
-image_path = '../TestImage/49.png'
-image = Image.open(image_path).convert('L')
+image_path = '../TestImage/'+str(i)+'.png'
+image = Image.open(image_path).convert('1')
 image = misc.imresize(image, size=0.3)
 img = cv2.cvtColor(np.asarray(image),cv2.COLOR_GRAY2RGB)  
 src =img

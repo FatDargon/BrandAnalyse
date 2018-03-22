@@ -6,36 +6,38 @@ Created on 2018年3月1日
 '''
 import operator
 import math
+from tools.mprint import prettylist
 def handle_lines(lines,width,height):
     kh = []#横线
     ks = []#竖线
-    i = 0
+    i = 1
 #     print lines[0]
     ks,kh=get_hs(lines,width)
-    print 'get_hs'
-    print ks
+    if i==0:
+        print 'get_hs'
+        prettylist(kh)
     ks,kh=get_marge(ks,kh)
-    print 'get_marge'
-    print ks
-    ks,kh=extend_line(ks,kh,width,height)
-    print 'extend_line'
-    print ks
-    ks,kh=cut_line(ks,kh,width)
-    print 'cut_line'
-    print ks
+    if i==0:
+        print 'get_marge'
+        prettylist(kh)
+    ks,kh,mid=extend_line(ks,kh,width,height)
+    if i==0:
+        print 'extend_line'
+        prettylist(kh)
+    ks,kh=cut_line(ks,kh,mid)
+    if i==0:
+        print 'cut_line'
+        prettylist(kh)
     if kh==[]:
         kh=[[0,0,width,0],[0,height,width,height]]
     return ks,kh
-def normal(x,width):
+def normal(x,width,mid):
     if x<width*0.25:
-        x=0
-    if x>width*0.125*5:
-        x=width
-    if math.fabs(x-width/2)<width/8:
-        x = width/2
-    if math.fabs(x-width/2)<width/8:
-        x = width/2
-    return x
+        return 0
+    elif x>width*0.125*5:
+        return width
+    else:
+        return mid
 def get_hs(lines,width):
     kh = []#横线
     ks = []#竖线
@@ -86,13 +88,21 @@ def get_marge(ks,kh):
 def extend_line(ks,kh,width,height):
     new_ks = []
     new_kh=[[0,0,width,0],[0,height,width,height]]
+    mid = width/2
+    for x1,y1,x2,y2 in ks:
+        L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+        if L<=(height/32)*(height/32):
+            continue
+        if math.fabs(x1-mid)<mid//8:
+            mid =x1
+#     print mid
     for x1,y1,x2,y2 in kh:
         L = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
         if L<=(width/8)*(width/8):
             continue
-        tmp =[normal(x1,width),y1,normal(x2,width),y2]
-        print 'tmp:'
-        print tmp
+        tmp =[normal(x1,width,mid),y1,normal(x2,width,mid),y2]
+#         print 'tmp:'
+#         print tmp
         new_kh.append(tmp)
     new_kh.sort(cmp=None, key=operator.itemgetter(1))
     for x1,y1,x2,y2 in ks:
@@ -109,8 +119,8 @@ def extend_line(ks,kh,width,height):
             if y11<y2:
                 _max =y111
         new_ks.append([x1,_min,x2,_max])
-    return new_ks,new_kh
-def cut_line(ks,kh,width):
+    return new_ks,new_kh,mid
+def cut_line(ks,kh,mid):
     if ks==[] or kh==[]:
         return ks,kh
     _min = ks[0][1]
@@ -118,8 +128,8 @@ def cut_line(ks,kh,width):
     new_kh = []
     for x1,y1,x2,y2 in kh:
         if y1 > _min and y1 < _max:
-            new_kh.append([x1,y1,width/2,y2])
-            new_kh.append([width/2,y1,x2,y2])
+            new_kh.append([x1,y1,mid,y2])
+            new_kh.append([mid,y1,x2,y2])
         else:
             new_kh.append([x1,y1,x2,y2])
     return ks,new_kh
