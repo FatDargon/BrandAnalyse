@@ -18,11 +18,11 @@ def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
     
-max_pic_num=50
-images_path = getallfiles(u"E:/eclipse_python/BrandAnalyse/Result/CateImage/normal/500good",max_pic_num)
-i =0 
+max_pic_num=10
+images_path = getallfiles(u"E:/eclipse_python/BrandAnalyse/Result/CateImage/normal",max_pic_num)
 for image_path in images_path:
-    i=i+1
+    _tmp = image_path.split('\\')
+    _name =  _tmp[-2]+'_'+_tmp[-1].replace(".png","")
     image = get_file_content(image_path)
     options = {}
     options["language_type"] = "CHN_ENG"

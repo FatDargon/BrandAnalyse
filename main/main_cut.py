@@ -30,23 +30,25 @@ def main(image_name):
     img = open_file(image_name)
     if img ==None:
         return
-    rest,img_small = HoughLinesP(157,img,0.3) 
+    rest,img_small = HoughLinesP(254,img,0.3) 
 
     cut_image_2(rest,img,img_small,0.3,image_name)
  
-def main2(max_pic_num):
-    images_path = getallfiles(u"I:\商标\haotm",max_pic_num)
-    i = 0
+def main2(max_pic_num,path):
+    images_path = getallfiles(path,max_pic_num)
     for image_path in images_path:
-        i=i+1
+        _tmp = image_path.split('\\')
+        _name =  _tmp[-2]+'_'+_tmp[-1].replace(".png","")
         img = open_file2(image_path)
         if img ==None:
             return
-        rest,img_small = HoughLinesP(157,img,0.3)     
-        cut_image_2(rest,img,img_small,0.3,i)
+        rest,img_small = HoughLinesP(157,img,0.3)  
+#         matrix = np.asarray(img_small)    
+#         Image.fromarray(matrix).show()
+        cut_image_2(rest,img,img_small,0.3,_name)
  
 if __name__ == '__main__':     
     time_start=time.time()
-    main2(200)
+    main2(200,u"K:\商标\haotm")
     time_end=time.time()
     print('totally cost',time_end-time_start)

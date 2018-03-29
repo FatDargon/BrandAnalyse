@@ -18,9 +18,12 @@ def paint_area(area,image,image_name):
         region = (x1,y1,x2,y2)
     print region
     drawObject = ImageDraw.Draw(image)  
+    drawObject.line((0,0) +image.size, fill=128)
     drawObject.rectangle(region,outline = "red")
+    image.show()
     return image
 image_path = '../Result/CateImage/normal/500good/1_3_0.98.png'
 image = open_file2(image_path)
-img = paint_area((100,100,500,500),image,2)
-img.show()
+img = paint_area((100,150,200,300),image,2)
+plt.imshow(img)
+plt.show()

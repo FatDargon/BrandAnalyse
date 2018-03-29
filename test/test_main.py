@@ -6,5 +6,5 @@ Created on 2018年3月12日
 '''
 from main.main_cut import main
 # from main.main import main_show
-main(34)
+# main(34)
 # main_show(5)
