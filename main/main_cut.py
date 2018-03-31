@@ -10,8 +10,9 @@ import numpy as np
 from scipy import misc
 from tools.HandleLines import handle_lines
 from tools.GetRect import get_rect
-from tools.CutImage import cut_image
-from tools.OpenFile import open_file
+from tools.CutImage import *
+from tools.OpenFile import *
+
 import time
 
 
@@ -24,19 +25,30 @@ def HoughLinesP(minLINELENGTH,image,size):
     picS = cv_img.shape[0]
     ks,kh = handle_lines(lines,picH,picS)
     rest = get_rect(ks,kh,picH,picS)
-    return rest
+    return rest,image
 def main(image_name):
     img = open_file(image_name)
     if img ==None:
         return
-    rest = HoughLinesP(162,img,0.3) 
+    rest,img_small = HoughLinesP(254,img,0.3) 
 
-    cut_image(rest,img,0.3,image_name)
+    cut_image_2(rest,img,img_small,0.3,image_name)
  
+def main2(max_pic_num,path):
+    images_path = getallfiles(path,max_pic_num)
+    for image_path in images_path:
+        _tmp = image_path.split('\\')
+        _name =  _tmp[-2]+'_'+_tmp[-1].replace(".png","")
+        img = open_file2(image_path)
+        if img ==None:
+            return
+        rest,img_small = HoughLinesP(157,img,0.3)  
+#         matrix = np.asarray(img_small)    
+#         Image.fromarray(matrix).show()
+        cut_image_2(rest,img,img_small,0.3,_name)
  
-    
-time_start=time.time()
-for i in range(50):
-    main(i)
-time_end=time.time()
-print('totally cost',time_end-time_start)
+if __name__ == '__main__':     
+    time_start=time.time()
+    main2(200,u"K:\商标\haotm")
+    time_end=time.time()
+    print('totally cost',time_end-time_start)
