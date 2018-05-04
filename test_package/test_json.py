@@ -11,6 +11,7 @@ from tools.OpenFile import open_file2
 from tools.CutImage import cut_image, cut_area
 from tools.mprint import *
 from aip.ocr import AipOcr
+from tools.PaintArea import paint_area
 def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
@@ -37,16 +38,16 @@ def save_file(image_path):
     f.write(_str)
     f.close()
 def main():   
-    image_path = '../Result/CateImage/normal/1_3_4.png'#1_6_6.png
+    image_path = 'E:/eclipse_python/BrandAnalyse/Result/CateImage/normal/10_102_2'#1_6_6.png
 #     save_file(image_path)
     f = open('test.json','r')            
     line = f.readline()
-    result_json = json.loads(line)        
-    key = get_key(result_json)
+    key = eval(line)
     pretty_list(key)
 #     print key
     area = get_brand_area(key)
     img = open_file2(image_path)
-    area[2]= img.size[1]
-    cut_area(area,img,'test')
+    area[2]= img.size[0]
+    img = paint_area(area,img,"test")
+    img.show()
 main()
