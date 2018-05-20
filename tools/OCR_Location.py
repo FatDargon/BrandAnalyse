@@ -17,25 +17,29 @@ _ZhuanYongQiXian = u'专用期限'
 _type1 = [_ZhuCeHao,_ShangBiao, _ShiYongShangPin,_QiYeMingCheng,_QiYeDiZhi,_ZhuCeRiQi]
 _type2 = [_ZhuCeHao,_ShiYongShangPin,_QiYeMingCheng,_ZhuanYongQiXian] 
 def get_cate(_json):
-    global _ZhuCeHao,_ShangBiao, _ShiYongShangPin,_QiYeMingCheng,_QiYeDiZhi,_ZhuCeRiQi,_ZhuanYongQiXian,_type2,_type1
-    _list_words =[ item['words'] for item in _json['words_result']]
-    _list_words_str = ''.join(_list_words)#     print _list_words
-    tag_zch = re.findall(_ZhuCeHao, _list_words_str)#标志 记录是否有注册号  如果有 证明是正常的切分
-#     print len(tag_zch)
-#     print _list_words_str
-    y_m_d = re.compile(u"年|月|日")
-    tag_y_m_d = re.findall(y_m_d, _list_words_str)
-    pretty_un( tag_y_m_d)
-    if len(tag_y_m_d) < 3:
+    try:
+        global _ZhuCeHao,_ShangBiao, _ShiYongShangPin,_QiYeMingCheng,_QiYeDiZhi,_ZhuCeRiQi,_ZhuanYongQiXian,_type2,_type1
+        _list_words =[ item['words'] for item in _json['words_result']]
+        _list_words_str = ''.join(_list_words)#     print _list_words
+        tag_zch = re.findall(_ZhuCeHao, _list_words_str)#标志 记录是否有注册号  如果有 证明是正常的切分
+    #     print len(tag_zch)
+    #     print _list_words_str
+        y_m_d = re.compile(u"年|月|日")
+        tag_y_m_d = re.findall(y_m_d, _list_words_str)
+        pretty_un( tag_y_m_d)
+        if len(tag_y_m_d) < 3:
+            return 4
+        if len(tag_zch) >= 2:
+            return 3# 多个  需要继续切分
+        elif len(tag_zch)==0:
+            return 0# 错误切分
+        elif _ZhuanYongQiXian in _list_words_str:
+            return 2
+        elif _ShangBiao in _list_words_str:
+            return 1
+    except:
+        print "get_cate error"
         return 4
-    if len(tag_zch) >= 2:
-        return 3# 多个  需要继续切分
-    elif len(tag_zch)==0:
-        return 0# 错误切分
-    elif _ZhuanYongQiXian in _list_words_str:
-        return 2
-    elif _ShangBiao in _list_words_str:
-        return 1
     
 def get_key(_json,_type_num):
     # print json.dumps(j,indent=4)

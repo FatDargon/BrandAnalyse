@@ -21,17 +21,26 @@ def mymovefile(srcfile,dstfile):
             os.makedirs(fpath)                #创建路径
         shutil.move(srcfile,dstfile)          #移动文件
         print "move %s -> %s"%( srcfile,dstfile)
-def cut_twice(image_path):
-    mymovefile(image_path,'../Result/TwiceCut/')
-def main_cut_twice(max_pic_num,_path):
-    images_path = getallfiles(_path,max_pic_num)
-    for image_path in images_path:      
-        main_cut_twice_each(image_path)       
+def cut_twice(image_path,_path ='../Result/TwiceCut/' ):
+    mymovefile(image_path,_path)
+    
+    
+def main_cut_twice(max_pic_num,_pass,_path):
+    images_path = getallfiles(_path,max_pic_num+_pass)
+    i = 0
+    for image_path in images_path:
+        i=i+1
+        if i <= _pass:
+            continue
+        else:      
+            main_cut_twice_each(image_path)
 def main_cut_twice_each(image_path):
     _tmp = image_path.split('/')
     _name = _tmp[-1].replace(".png","")
     _json = get_json(image_path)
+
     _type_num = get_cate(_json)
+
 #     print _type_num
     if _type_num == 0:
         print _name + " is no words"
@@ -42,18 +51,23 @@ def main_cut_twice_each(image_path):
         print _name +" is not complete"
     else:
         print _name +" is normal"
-        _key = get_key(_json,_type_num)
+        try:
+            _key = get_key(_json,_type_num)
 #         f = open("../test_package/test.json","w+")
 #         f.write(str(_key))
 #         f.close()
-        pretty_list(_key)
-        area = get_brand_area(_key)
-        img = open_file2(image_path)
-        area[2]= img.size[0]-20
-        cut_area(area,img,_name)
+            pretty_list(_key)
+            area = get_brand_area(_key)
+            img = open_file2(image_path)
+            area[2]= img.size[0]-20
+        
+            cut_area(area,img,_name)
+        except:
+            print "cut_error"
+            cut_twice(image_path,'../Result/Error/')
 # main_cut_twice(50,"../Result/CateImage/normal/")
 if __name__ == '__main__':
 #     image_path = 'E:/eclipse_python/BrandAnalyse/Result/CateImage/normal/10_100_1.png'
 #     main_cut_twice_each(image_path)
-    main_cut_twice(20,"../Result/CateImage/normal/")
+    main_cut_twice(500,360,"../Result/CateImage/normal/")
     

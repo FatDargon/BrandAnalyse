@@ -1,4 +1,8 @@
 eclipse.preferences.version=1
+encoding//ImgDist/histsimilar.py=utf-8
+encoding//ImgDist/test_code.py=utf-8
+encoding//ImgDist/test_hist.py=utf-8
+encoding//ImgDist/test_muban.py=utf-8
 encoding//main/main_cut.py=utf-8
 encoding//main/mian_cut_twice.py=utf-8
 encoding//test/test.py=utf-8
